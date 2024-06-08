@@ -4,28 +4,28 @@ from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv()  # Load environment variables
 
 Base = declarative_base()
 
 class Movie(Base):
     __tablename__ = 'movies'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primaryKey=True)
     title = Column(String)
     description = Column(String)
     director = Column(String)
-    release_date = Column(Date)
+    releaseDate = Column(Date)
     rating = Column(Float)
 
-def db_connect():
+def connectToDatabase():
     return create_engine(os.getenv("DATABASE_URL"))
 
-def create_movie_table(engine):
-    Base.metadata.create_all(engine)
+def createMoviesTable(databaseEngine):
+    Base.metadata.createAll(databaseEngine)
 
-def initialize_db():
-    engine = db_connect()
-    create_movie_table(engine)
-    Session = sessionmaker(bind=engine)
-    return Session()
+def initializeDatabase():
+    engine = connectToDatabase()
+    createMoviesTable(engine)
+    sessionFactory = sessionmaker(bind=engine)
+    return sessionFactory()
