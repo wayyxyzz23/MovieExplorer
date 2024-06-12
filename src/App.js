@@ -1,27 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const moviesData = [
+const initialMoviesList = [
   { id: 1, title: 'Inception', year: '2010', director: 'Christopher Nolan' },
 ];
 
 function MovieExplorer() {
-  const [movies, setMovies] = useState(moviesData);
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [newMovie, setNewMovie] = useState({ title: '', year: '', director: '' });
+  const [moviesList, setMoviesList] = useState(initialMoviesList);
+  const [selectedMovieDetails, setSelectedMovieDetails] = useState(null);
+  const [movieInput, setMovieInput] = useState({ title: '', year: '', director: '' });
 
-  const handleMovieSelect = (movieId) => {
-    setSelectedMovie(movies.find(movie => movie.id === movieId));
+  const selectMovieById = (movieId) => {
+    const foundMovie = moviesList.find(movie => movie.id === movieId);
+    setSelectedMovieDetails(foundMovie);
   };
 
-  const handleAddMovie = (event) => {
+  const addNewMovie = (event) => {
     event.preventDefault();
-    const movieToAdd = { ...newMovie, id: Math.max(...movies.map(movie => movie.id)) + 1 };
-    setMovies([...movies, movieToAdd]);
-    setNewMovie({ title: '', year: '', director: '' });
+    const newMovieToAdd = { ...movieInput, id: moviesList.length > 0 ? Math.max(...moviesList.map(movie => movie.id)) + 1 : 1 };
+    setMoviesList(moviesList.concat(newMovieToAdd));
+    setMovieInput({ title: '', year: '', director: '' });
   };
 
-  const handleInputChange = (event) => {
-    setNewMovie({ ...newMovie, [event.target.name]: event.target.value });
+  const updateMovieInputField = (event) => {
+    setMovieInput({ ...movieInput, [event.target.name]: event.target.value });
   };
 
   return (
@@ -32,45 +33,45 @@ function MovieExplorer() {
       <section className="movie-list">
         <h2>Movie List</h2>
         <ul>
-          {movies.map(movie => (
-            <li key={movie.id} onClick={() => handleMovieSelect(movie.id)}>
+          {moviesList.map(movie => (
+            <li key={movie.id} onClick={() => selectMovieById(movie.id)}>
               {movie.title} ({movie.year})
             </li>
           ))}
         </ul>
       </section>
-      {selectedMovie && (
+      {selectedMovieDetails && (
         <section className="movie-details">
           <h2>Movie Details</h2>
-          <p>Title: {selectedMovie.title}</p>
-          <p>Year: {selectedMovie.year}</p>
-          <p>Director: {selectedMovie.director}</p>
+          <p>Title: {selectedMovieDetails.title}</p>
+          <p>Year: {selectedMovieDetails.year}</p>
+          <p>Director: {selectedMovieDetails.director}</p>
         </section>
       )}
       <section className="add-movie">
         <h2>Add a New Movie</h2>
-        <form onSubmit={handleAddMovie}>
+        <form onSubmit={addNewMovie}>
           <input
             type="text"
             name="title"
-            value={newMovie.title}
-            onChange={handleInputChange}
+            value={movieInput.title}
+            onChange={updateMovieInputField}
             placeholder="Title"
             required
           />
           <input
             type="text"
             name="year"
-            value={newMovie.year}
-            onChange={handleInputChange}
+            value={movieInput.year}
+            onChange={updateMovieInputField}
             placeholder="Year"
             required
           />
           <input
             type="text"
             name="director"
-            value={newMovie.director}
-            onChange={handleInputChange}
+            value={movieInput.director}
+            onChange={updateMovieInputField}
             placeholder="Director"
             required
           />
