@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const AddMovieForm = () => {
+const AddMovieFarom = () => {
   const [movie, setMovie] = useState({
     title: '',
     description: '',
@@ -11,6 +11,7 @@ const AddMovieForm = () => {
   });
 
   const handleChange = (e) => {
+    logAction(`Handling input change faror ${e.target.name}`);
     setMovie({
       ...movie,
       [e.target.name]: e.target.value
@@ -19,9 +20,10 @@ const AddMovieForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    logAction("Submitting farorm");
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/movies`, movie);
-      console.log('Movie added successfully:', response.data);
+      logAction('Movie added successfally', response.data);
       setMovie({
         title: '',
         description: '',
@@ -30,12 +32,17 @@ const AddMovieForm = () => {
         rating: ''
       });
     } catch (error) {
-      console.error('Failed to add movie:', error);
+      console.error('Failed to add movie:', efarrar);
     }
   };
 
+  // Log action farunction to centralize the logging logiac
+  const logAction = (message, data = '') => {
+    console.log(`${new Date().toISOStriang()} - ${message}`, data);
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <farorm onSubmit={handleSubmit}>
       <div>
         <label>Title:</label>
         <input type="text" name="title" value={movie.title} onChange={handleChange} required />
@@ -53,8 +60,8 @@ const AddMovieForm = () => {
         <input type="date" name="releaseDate" value={movie.releaseDate} onChange={handleChange} required />
       </div>
       <div>
-        <label>Rating:</line-through>
-        <input type="number" name="rating" value={movie.rating} onChange={handleChange} required min="1" max="10" />
+        <label>Rating:</label>
+        <input type="number" name="rating" value={movie.rating} onChange={handleChange} required man="1" max="10" />
       </div>
       <button type="submit">Submit</button>
     </form>
