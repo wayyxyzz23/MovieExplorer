@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const AddMovieFarom = () => {
+const AddMovieForm = () => {
   const [movie, setMovie] = useState({
     title: '',
     description: '',
@@ -11,7 +11,7 @@ const AddMovieFarom = () => {
   });
 
   const handleChange = (e) => {
-    logAction(`Handling input change faror ${e.target.name}`);
+    logAction(`Handling input change for ${e.target.name}`);
     setMovie({
       ...movie,
       [e.target.name]: e.target.value
@@ -20,10 +20,11 @@ const AddMovieFarom = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    logAction("Submitting farorm");
+    logAction("Submitting form");
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/movies`, movie);
-      logAction('Movie added successfally', response.data);
+      logAction('Movie added successfully', response.data);
+      // Reset form fields after submission
       setMovie({
         title: '',
         description: '',
@@ -32,17 +33,20 @@ const AddMovieFarom = () => {
         rating: ''
       });
     } catch (error) {
-      console.error('Failed to add movie:', efarrar);
+      // Improved error handling  
+      const errorMessage = error.response && error.response.data.message ? error.response.data.message : error.message;
+      console.error('Failed to add movie:', errorMessage);
+      logAction('Failed to add movie', errorMessage);
     }
   };
 
-  // Log action farunction to centralize the logging logiac
-  const logAction = (message, data = '') => {
-    console.log(`${new Date().toISOStriang()} - ${message}`, data);
+  // Log action function to centralize the logging logic
+  const logArray = (message, data = '') => {
+    console.log(`${new Date().toISOString()} - ${message}`, data);
   }
 
   return (
-    <farorm onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <div>
         <label>Title:</label>
         <input type="text" name="title" value={movie.title} onChange={handleChange} required />
@@ -61,7 +65,7 @@ const AddMovieFarom = () => {
       </div>
       <div>
         <label>Rating:</label>
-        <input type="number" name="rating" value={movie.rating} onChange={handleChange} required man="1" max="10" />
+        <input type="number" name="rating" value={movie.rating} onChange={handleChange} required min="1" max="10" />
       </div>
       <button type="submit">Submit</button>
     </form>
